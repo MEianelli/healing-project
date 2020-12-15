@@ -11,26 +11,33 @@ window.onload = function () {
   createBossSpellList(boss);
   createHealthBars(healthBars);
   createBossSpellSliders(boss);
+  startSlidersAnimation();
+};
 
+function startSlidersAnimation() {
   let x = 0;
   const widthSize = sliderBar.offsetWidth;
   const spellSliders = document.querySelectorAll('.spell-slider');
   spellSliders.forEach(slider => {
     const percSecond = widthSize / slider.getAttribute('data-timer');
     const percFrame = percSecond / 60;
-    //moveFightslider(x, slider, percFrame);
+    moveFightslider(x, slider, percFrame);
   });
-};
+}
+
+function stopAllSliders() {}
+
+function callForAction(slide) {
+  if (slide.id === 'fight-end') stopAllSliders();
+}
 
 function moveFightslider(x, slide, timer) {
   slide.style.transform = `translateX(-${x}px)`;
-
   x += timer;
-
-  if (x > 353) {
+  if (x > sliderBar.offsetWidth - 7) {
+    callForAction(slide);
     x = 0;
   }
-
   setTimeout(() => {
     moveFightslider(x, slide, timer);
   }, 16.67);

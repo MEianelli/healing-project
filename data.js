@@ -6,13 +6,13 @@ export const data = {
       {
         spellName: 'fight end',
         spellId: 'fight-end',
-        duration: 90,
+        duration: 3,
         spellColor: 'white',
       },
       {
         spellName: 'aoe fire',
         spellId: 'aoe-fire',
-        duration: 5,
+        duration: 8,
         spellColor: '#0099ff',
       },
       {
