@@ -143,6 +143,7 @@ body {
   width: 100%;
   border-radius: 5px;
   background-color: #00d88f;
+  transition: width linear 0.2s;
 }
 
 .aura-green {
