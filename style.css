@@ -293,4 +293,6 @@ body {
   justify-content: center;
   align-items: center;
   transition: width 0.2s linear;
+  color: white;
+  font-size: 1.6em;
 }

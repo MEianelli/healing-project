@@ -66,8 +66,13 @@ function applyHealOnTarget(index, type) {
 
 function updateMana(type) {
   player.manaBar['currentMana'] -= player.skills[type].manaCost;
-  const manaBarWidthPercentage = (player.manaBar.currentMana / player.manaBar.maxMana) * 100;
+  let manaBarWidthPercentage = (player.manaBar.currentMana / player.manaBar.maxMana) * 100;
+  if (manaBarWidthPercentage <= 0) {
+    manaBarWidthPercentage = 0;
+    player.manaBar['currentMana'] = 0;
+  }
   manaBarDiv.style.width = `${manaBarWidthPercentage}%`;
+  manaBarDiv.innerHTML = `${player.manaBar['currentMana']}`;
 }
 
 function hotsCountDown() {
@@ -96,7 +101,20 @@ function resetCasting(index) {
   castingDiv[index].style.display = 'none';
 }
 
+function dontAllowHeal(type, index) {
+  if (player.manaBar['currentMana'] < player.skills[type].manaCost) {
+    resetCasting(index);
+    return true;
+  }
+  if (healthBars[index]['currentHealth'] <= 0) {
+    resetCasting(index);
+    return true;
+  }
+  return false;
+}
+
 function castingHeal(index) {
+  if (dontAllowHeal('hold', index)) return;
   castingDiv[index].style.width = `${castingTimer}%`;
   castingTimer += 1;
   if (castingTimer > 86) {
@@ -118,7 +136,8 @@ function updateHealthDivs() {
   healthBarsDivs.forEach((div, index) => {
     let delta = healthBars[index].maxHealth - healthBars[index].currentHealth;
     const percentHealth = delta / healthBars[index].maxHealth;
-    const percent = (1 - percentHealth) * 94;
+    let percent = (1 - percentHealth) * 94;
+    if (percent <= 0) percent = 0;
     div.style.width = `${percent}%`;
     updateDivColor(div);
   });
@@ -140,7 +159,7 @@ function calculateDamage() {
   const target3 = Math.floor(Math.random() * healthBars.length);
   arrayTargets.push(target1, target2, target3);
   arrayTargets.forEach(target => {
-    const dmg = Math.floor(Math.random() * 20);
+    const dmg = Math.floor(Math.random() * 50);
     healthBars[target].damage.currentDmg = dmg;
   });
 }
@@ -247,6 +266,7 @@ function handleDownOnHealth(healthBar, index) {
 function handleUpOnHealth(healthBar, index) {
   if (globalTimer - mouseTimer < 8) {
     if (!healthBar.auras.healOverTime.active) {
+      if (dontAllowHeal('hot', index)) return;
       displayHotBar(index);
       activeHots.push([healthBar, index]);
       healthBar.auras.healOverTime.active = true;
