@@ -6,7 +6,7 @@ export const data = {
       {
         spellName: 'fight end',
         spellId: 'fight-end',
-        duration: 30,
+        duration: 90,
         spellColor: 'white',
         currentPosition: 0,
       },
@@ -56,11 +56,8 @@ export const data = {
         hasAggro: true,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -77,11 +74,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -98,11 +92,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -119,11 +110,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -140,11 +128,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -161,11 +146,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -182,11 +164,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -203,11 +182,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -224,11 +200,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -245,11 +218,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -266,11 +236,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -287,11 +254,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -308,11 +272,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -329,11 +290,8 @@ export const data = {
         hasAggro: false,
         healOverTime: {
           active: false,
-          amount: 0,
-          duration: 5,
           currentWidth: 86,
         },
-        isCasting: false,
       },
       damage: {
         totalDmg: 0,
@@ -352,13 +310,15 @@ export const data = {
     skills: {
       hot: {
         name: 'renew',
-        manaCost: 250,
+        manaCost: 550,
         amountToHeal: 200,
+        duration: 5,
       },
       hold: {
         name: 'renew',
         manaCost: 400,
-        amountToHeal: 200,
+        amountToHeal: 500,
+        castTime: 5,
       },
       aoe: {
         name: 'renew',

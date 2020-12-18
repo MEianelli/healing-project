@@ -17,6 +17,7 @@ let animationRun = true;
 let castingTimer = 0;
 let globalTimer = 0;
 let mouseTimer = 0;
+let overhealing = 0;
 
 window.onload = function () {
   createBossSpellList(boss);
@@ -55,6 +56,14 @@ function startAnimation() {
   }
 }
 
+function applyHealOnTarget(index, type) {
+  healthBars[index]['currentHealth'] += player.skills[type].amountToHeal;
+  if (healthBars[index]['currentHealth'] > healthBars[index]['maxHealth']) {
+    overhealing += healthBars[index]['currentHealth'] - healthBars[index]['maxHealth'];
+    healthBars[index]['currentHealth'] = healthBars[index]['maxHealth'];
+  }
+}
+
 function updateMana(type) {
   player.manaBar['currentMana'] -= player.skills[type].manaCost;
   const manaBarWidthPercentage = (player.manaBar.currentMana / player.manaBar.maxMana) * 100;
@@ -63,17 +72,24 @@ function updateMana(type) {
 
 function hotsCountDown() {
   activeHots.forEach(([barobj, index]) => {
-    barobj.auras.healOverTime['currentWidth'] -= barobj.auras.healOverTime.percentFrame;
-    hotsDiv[index].style.width = `${barobj.auras.healOverTime.currentWidth}%`;
+    let tempVarForWidth = barobj.auras.healOverTime.currentWidth;
+    tempVarForWidth -= barobj.auras.healOverTime.percentFrame;
+
+    if (tempVarForWidth % 16 < 0.3 && tempVarForWidth > 5) {
+      applyHealOnTarget(index, 'hot');
+    }
+    hotsDiv[index].style.width = `${tempVarForWidth}%`;
     if (barobj.auras.healOverTime.currentWidth <= 0) {
       activeHots.shift();
-      barobj.auras.healOverTime.currentWidth = 86;
+      tempVarForWidth = 86;
       barobj.auras.healOverTime.active = false;
     }
+    barobj.auras.healOverTime['currentWidth'] = tempVarForWidth;
   });
 }
 
 function resetCasting(index) {
+  if (index === null) return;
   castingTimer = 0;
   castingDiv[index].style.width = `0%`;
   healTarget = null;
@@ -85,6 +101,7 @@ function castingHeal(index) {
   castingTimer += 1;
   if (castingTimer > 86) {
     resetCasting(index);
+    applyHealOnTarget(index, 'hold');
     updateMana('hold');
   }
 }
@@ -99,7 +116,7 @@ function updateDivColor(div) {
 
 function updateHealthDivs() {
   healthBarsDivs.forEach((div, index) => {
-    const delta = healthBars[index].maxHealth - healthBars[index].currentHealth;
+    let delta = healthBars[index].maxHealth - healthBars[index].currentHealth;
     const percentHealth = delta / healthBars[index].maxHealth;
     const percent = (1 - percentHealth) * 94;
     div.style.width = `${percent}%`;
@@ -123,7 +140,7 @@ function calculateDamage() {
   const target3 = Math.floor(Math.random() * healthBars.length);
   arrayTargets.push(target1, target2, target3);
   arrayTargets.forEach(target => {
-    const dmg = Math.floor(Math.random() * 10);
+    const dmg = Math.floor(Math.random() * 20);
     healthBars[target].damage.currentDmg = dmg;
   });
 }
@@ -140,7 +157,8 @@ function updateDamage() {
 
 function calculatehotsPercentPerFrame() {
   healthBars.forEach(bar => {
-    const percentperFrame = 86 / (bar.auras.healOverTime.duration * 60);
+    let percentperFrame = 86 / (player.skills.hot.duration * 60);
+    percentperFrame = Math.floor(percentperFrame * 100) / 100;
     bar.auras.healOverTime['percentFrame'] = percentperFrame;
   });
 }
