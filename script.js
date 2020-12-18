@@ -8,8 +8,13 @@ const timeLine = document.querySelector('.timeline-container');
 const sliderBar = document.querySelector('.slider');
 let spellSliders;
 let healthBarsDivs;
+let borderDiv;
+let castingDiv;
+let hotsDiv;
+let activeHots = [];
+let healTarget = null;
 let animationRun = true;
-let mouseIsPressed = false;
+let castingTimer = 0;
 let globalTimer = 0;
 let mouseTimer = 0;
 
@@ -19,28 +24,61 @@ window.onload = function () {
   createBossSpellSliders(boss);
   calculatePixelsPerFrame(boss);
   calculateHealthPerPixel();
+  calculatehotsPercentPerFrame();
   spellSliders = document.querySelectorAll('.spell-slider');
   healthBarsDivs = document.querySelectorAll('.health-bar');
-  //startAnimation();
+  borderDiv = document.querySelectorAll('.border-bar');
+  castingDiv = document.querySelectorAll('.top-border');
+  hotsDiv = document.querySelectorAll('.bottom-border');
+
+  startAnimation();
 };
 
-async function startAnimation() {
+function startAnimation() {
   globalTimer += 1;
 
   updateBossSpellsPosition(boss);
   updateBossSpellsDivs(spellSliders, boss);
 
-  await calculateDamage();
-  await updateDamage();
-  await applyDamage();
-  await updateHealthDivs();
+  calculateDamage();
+  updateDamage();
+  applyDamage();
+  updateHealthDivs();
 
-  castingSpell();
+  if (healTarget !== null) castingHeal(healTarget);
+  if (activeHots.length !== 0) hotsCountDown();
 
   if (animationRun) {
     setTimeout(() => {
       startAnimation();
     }, 16.67);
+  }
+}
+
+function hotsCountDown() {
+  activeHots.forEach(([barobj, index]) => {
+    barobj.auras.healOverTime['currentWidth'] -= barobj.auras.healOverTime.percentFrame;
+    hotsDiv[index].style.width = `${barobj.auras.healOverTime.currentWidth}%`;
+    if (barobj.auras.healOverTime.currentWidth <= 0) {
+      activeHots.shift();
+      barobj.auras.healOverTime.currentWidth = 86;
+      barobj.auras.healOverTime.active = false;
+    }
+  });
+}
+
+function resetCasting(index) {
+  castingTimer = 0;
+  castingDiv[index].style.width = `0%`;
+  healTarget = null;
+  castingDiv[index].style.display = 'none';
+}
+
+function castingHeal(index) {
+  castingDiv[index].style.width = `${castingTimer}%`;
+  castingTimer += 1;
+  if (castingTimer > 86) {
+    resetCasting(index);
   }
 }
 
@@ -52,17 +90,17 @@ function updateDivColor(div) {
   else div.style.backgroundColor = 'rgb(0, 216, 143)';
 }
 
-async function updateHealthDivs() {
+function updateHealthDivs() {
   healthBarsDivs.forEach((div, index) => {
     const delta = healthBars[index].maxHealth - healthBars[index].currentHealth;
     const percentHealth = delta / healthBars[index].maxHealth;
-    const percent = (1 - percentHealth) * 100;
+    const percent = (1 - percentHealth) * 94;
     div.style.width = `${percent}%`;
     updateDivColor(div);
   });
 }
 
-async function applyDamage() {
+function applyDamage() {
   healthBars.forEach(bar => {
     const {
       damage: { totalDmg },
@@ -71,25 +109,32 @@ async function applyDamage() {
   });
 }
 
-async function calculateDamage() {
+function calculateDamage() {
   const arrayTargets = [];
   const target1 = Math.floor(Math.random() * healthBars.length);
   const target2 = Math.floor(Math.random() * healthBars.length);
   const target3 = Math.floor(Math.random() * healthBars.length);
   arrayTargets.push(target1, target2, target3);
   arrayTargets.forEach(target => {
-    const dmg = Math.floor(Math.random() * 100);
+    const dmg = Math.floor(Math.random() * 10);
     healthBars[target].damage.currentDmg = dmg;
   });
 }
 
-async function updateDamage() {
+function updateDamage() {
   healthBars.forEach(bar => {
     const {
       damage: { currentDmg, dot },
     } = bar;
     bar.damage['totalDmg'] = currentDmg + dot;
     bar.damage['currentDmg'] = 0;
+  });
+}
+
+function calculatehotsPercentPerFrame() {
+  healthBars.forEach(bar => {
+    const percentperFrame = 86 / (bar.auras.healOverTime.duration * 60);
+    bar.auras.healOverTime['percentFrame'] = percentperFrame;
   });
 }
 
@@ -160,47 +205,66 @@ function createBossSpellList({ spells }) {
     bossSpellList.appendChild(newSpell);
   });
 }
-
-function castingSpell() {
-  if (mouseIsPressed) {
-    console.log('CASTING');
-  }
+function displayCastingBar(index) {
+  castingDiv[index].style.display = 'block';
 }
 
-function handleDownOnHealth(healthBar) {
-  mouseIsPressed = true;
+function displayHotBar(index) {
+  hotsDiv[index].style.display = 'block';
+}
+
+function handleDownOnHealth(healthBar, index) {
   mouseTimer = globalTimer;
+  displayCastingBar(index);
+  healTarget = index;
 }
 
-function handleUpOnHealth(healthBar) {
-  mouseIsPressed = false;
-  if (globalTimer - mouseTimer < 8) return console.log('CLICK RAPIDO');
-  return console.log(`CASTOU POR ${globalTimer - mouseTimer} frames`);
+function handleUpOnHealth(healthBar, index) {
+  if (globalTimer - mouseTimer < 8) {
+    displayHotBar(index);
+    if (!healthBar.auras.healOverTime.active) {
+      activeHots.push([healthBar, index]);
+      healthBar.auras.healOverTime.active = true;
+    }
+    resetCasting(healTarget);
+    return;
+  }
+  resetCasting(healTarget);
 }
 
 function createHealthBars() {
-  healthBars.forEach(bar => {
+  healthBars.forEach((bar, index) => {
+    const healthWraper = document.createElement('div');
     const borderBar = document.createElement('div');
     const healthBar = document.createElement('div');
+    const topBorder = document.createElement('div');
+    const topBorderStatic = document.createElement('div');
+    const bottomBorder = document.createElement('div');
+    const bottomBorderStatic = document.createElement('div');
+    const healthBackground = document.createElement('div');
 
+    healthBackground.className = 'health-background';
+    healthWraper.className = 'health-wraper';
+    topBorder.className = 'top-border';
+    topBorderStatic.className = 'top-border-static';
+    bottomBorder.className = 'bottom-border';
+    bottomBorderStatic.className = 'bottom-border-static';
     borderBar.className = 'border-bar';
     healthBar.className = 'health-bar';
-    healthBar.addEventListener('mousedown', () => {
-      handleDownOnHealth(bar);
+    borderBar.addEventListener('mousedown', () => {
+      handleDownOnHealth(bar, index);
     });
-    healthBar.addEventListener('mouseup', () => {
-      handleUpOnHealth(bar);
+    borderBar.addEventListener('mouseup', () => {
+      handleUpOnHealth(bar, index);
     });
 
-    if (Math.random() < 0.3) {
-      if (Math.random() < 0.5) {
-        borderBar.classList.add('aura-green');
-      } else {
-        borderBar.classList.add('aura-white');
-      }
-    }
-
+    borderBar.appendChild(healthBackground);
     borderBar.appendChild(healthBar);
-    healthBarsContainer.appendChild(borderBar);
+    healthWraper.appendChild(borderBar);
+    healthWraper.appendChild(topBorder);
+    healthWraper.appendChild(topBorderStatic);
+    healthWraper.appendChild(bottomBorder);
+    healthWraper.appendChild(bottomBorderStatic);
+    healthBarsContainer.appendChild(healthWraper);
   });
 }

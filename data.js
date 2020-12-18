@@ -6,7 +6,7 @@ export const data = {
       {
         spellName: 'fight end',
         spellId: 'fight-end',
-        duration: 90,
+        duration: 30,
         spellColor: 'white',
         currentPosition: 0,
       },
@@ -52,7 +52,16 @@ export const data = {
       type: 'tank',
       maxHealth: 10000,
       currentHealth: 10000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: true,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -64,7 +73,16 @@ export const data = {
       type: 'melee',
       maxHealth: 7000,
       currentHealth: 7000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -76,7 +94,16 @@ export const data = {
       type: 'melee',
       maxHealth: 7000,
       currentHealth: 7000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -88,7 +115,16 @@ export const data = {
       type: 'melee',
       maxHealth: 7000,
       currentHealth: 7000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -100,7 +136,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -112,7 +157,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -124,7 +178,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -136,7 +199,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -148,7 +220,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -160,7 +241,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -172,7 +262,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -184,7 +283,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -196,7 +304,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
@@ -208,7 +325,16 @@ export const data = {
       type: 'range',
       maxHealth: 4000,
       currentHealth: 4000,
-      currentAura: 'none',
+      auras: {
+        hasAggro: false,
+        healOverTime: {
+          active: false,
+          amount: 0,
+          duration: 5,
+          currentWidth: 86,
+        },
+        isCasting: false,
+      },
       damage: {
         totalDmg: 0,
         currentDmg: 0,
