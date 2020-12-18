@@ -280,6 +280,8 @@ body {
 
 .mana-bar-container {
   height: 50%;
+  background-color: #3a3a3a;
+  border-radius: 8px;
 }
 
 #mana-bar {
@@ -290,4 +292,5 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: width 0.2s linear;
 }

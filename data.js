@@ -350,10 +350,26 @@ export const data = {
       currentMana: 10000,
     },
     skills: {
-      tap: 'renew',
-      cast: 'flash',
-      aoe: 'circle',
-      ultimate: 'allrenew',
+      hot: {
+        name: 'renew',
+        manaCost: 250,
+        amountToHeal: 200,
+      },
+      hold: {
+        name: 'renew',
+        manaCost: 400,
+        amountToHeal: 200,
+      },
+      aoe: {
+        name: 'renew',
+        manaCost: 400,
+        amountToHeal: 200,
+      },
+      ultimate: {
+        name: 'renew',
+        manaCost: 1000,
+        amountToHeal: 200,
+      },
     },
   },
 };

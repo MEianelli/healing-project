@@ -5,6 +5,7 @@ const bossSpellList = document.querySelector('.spell-list');
 const healthBarsContainer = document.querySelector('.health-container');
 const timeLine = document.querySelector('.timeline-container');
 const sliderBar = document.querySelector('.slider');
+const manaBarDiv = document.querySelector('#mana-bar');
 let spellSliders;
 let healthBarsDivs;
 let borderDiv;
@@ -54,6 +55,12 @@ function startAnimation() {
   }
 }
 
+function updateMana(type) {
+  player.manaBar['currentMana'] -= player.skills[type].manaCost;
+  const manaBarWidthPercentage = (player.manaBar.currentMana / player.manaBar.maxMana) * 100;
+  manaBarDiv.style.width = `${manaBarWidthPercentage}%`;
+}
+
 function hotsCountDown() {
   activeHots.forEach(([barobj, index]) => {
     barobj.auras.healOverTime['currentWidth'] -= barobj.auras.healOverTime.percentFrame;
@@ -78,6 +85,7 @@ function castingHeal(index) {
   castingTimer += 1;
   if (castingTimer > 86) {
     resetCasting(index);
+    updateMana('hold');
   }
 }
 
@@ -220,10 +228,11 @@ function handleDownOnHealth(healthBar, index) {
 
 function handleUpOnHealth(healthBar, index) {
   if (globalTimer - mouseTimer < 8) {
-    displayHotBar(index);
     if (!healthBar.auras.healOverTime.active) {
+      displayHotBar(index);
       activeHots.push([healthBar, index]);
       healthBar.auras.healOverTime.active = true;
+      updateMana('hot');
     }
     resetCasting(healTarget);
     return;
