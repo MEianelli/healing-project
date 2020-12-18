@@ -1,4 +1,3 @@
-/// <reference path="./p5.global-mode.d.ts" />;
 import { data } from './data.js';
 const { boss, healthBars, player } = data;
 
