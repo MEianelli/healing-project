@@ -16,6 +16,11 @@ export const data = {
         duration: 8,
         spellColor: '#0099ff',
         currentPosition: 0,
+        spellDamage: {
+          type: 'direct',
+          amount: 500,
+          targets: 'all',
+        },
       },
       {
         spellName: 'cleave',
@@ -23,20 +28,35 @@ export const data = {
         duration: 12,
         spellColor: '#fe0000',
         currentPosition: 0,
+        spellDamage: {
+          type: 'direct',
+          amount: 1000,
+          targets: 'melee',
+        },
       },
       {
         spellName: 'burst',
         spellId: 'burst',
-        duration: 20,
+        duration: 6,
         spellColor: '#4412f4',
         currentPosition: 0,
+        spellDamage: {
+          type: 'dot',
+          amount: 1000,
+          targets: 1,
+        },
       },
       {
-        spellName: 'heal',
-        spellId: 'heal',
-        duration: 5,
+        spellName: 'Dmg over time',
+        spellId: 'dot',
+        duration: 3,
         spellColor: '#feea22',
         currentPosition: 0,
+        spellDamage: {
+          type: 'direct',
+          amount: 200,
+          targets: 'all',
+        },
       },
       {
         spellName: 'ultimate',
@@ -44,6 +64,11 @@ export const data = {
         duration: 40,
         spellColor: '#00d88f',
         currentPosition: 0,
+        spellDamage: {
+          type: 'direct',
+          amount: 3000,
+          targets: 3,
+        },
       },
     ],
   },

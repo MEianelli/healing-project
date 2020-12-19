@@ -6,6 +6,8 @@ const healthBarsContainer = document.querySelector('.health-container');
 const timeLine = document.querySelector('.timeline-container');
 const sliderBar = document.querySelector('.slider');
 const manaBarDiv = document.querySelector('#mana-bar');
+const manaTextDiv = document.querySelector('.mana-bar-text');
+manaTextDiv.innerHTML = `${player.manaBar['currentMana']}`;
 let spellSliders;
 let healthBarsDivs;
 let borderDiv;
@@ -41,7 +43,7 @@ function startAnimation() {
   updateBossSpellsPosition(boss);
   updateBossSpellsDivs(spellSliders, boss);
 
-  calculateDamage();
+  //calculateDamage();
   updateDamage();
   applyDamage();
   updateHealthDivs();
@@ -72,7 +74,7 @@ function updateMana(type) {
     player.manaBar['currentMana'] = 0;
   }
   manaBarDiv.style.width = `${manaBarWidthPercentage}%`;
-  manaBarDiv.innerHTML = `${player.manaBar['currentMana']}`;
+  manaTextDiv.innerHTML = `${player.manaBar['currentMana']}`;
 }
 
 function hotsCountDown() {
@@ -152,15 +154,9 @@ function applyDamage() {
   });
 }
 
-function calculateDamage() {
-  const arrayTargets = [];
-  const target1 = Math.floor(Math.random() * healthBars.length);
-  const target2 = Math.floor(Math.random() * healthBars.length);
-  const target3 = Math.floor(Math.random() * healthBars.length);
-  arrayTargets.push(target1, target2, target3);
-  arrayTargets.forEach(target => {
-    const dmg = Math.floor(Math.random() * 50);
-    healthBars[target].damage.currentDmg = dmg;
+function calculateDamage(arrayOfDamage) {
+  arrayOfDamage.forEach((dmg, index) => {
+    healthBars[index].damage.currentDmg = dmg;
   });
 }
 
@@ -215,8 +211,35 @@ function calculatePixelsPerFrame({ spells }) {
   });
 }
 
+function buildArrayOfDamage({ type, amount, targets }) {
+  const arraySize = healthBarsDivs.length;
+  let targetsIndex = [];
+  if (typeof targets === 'number') {
+    while (targetsIndex.length < targets) {
+      const randomTarget = Math.floor(Math.random() * arraySize);
+      targetsIndex.push(randomTarget);
+    }
+  } else if (targets === 'all') {
+    targetsIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+  } else if (targets === 'melee') {
+    targetsIndex = [1, 2, 3];
+  }
+  const arrayOfDamage = [];
+  for (let i = 0; i < arraySize; i++) {
+    targetsIndex.includes(i) ? arrayOfDamage.push(amount) : arrayOfDamage.push(0);
+  }
+  return arrayOfDamage;
+}
+
 async function callForAction(spell) {
-  if (spell.spellId === 'fight-end') animationRun = false;
+  const { spellId, spellDamage } = spell;
+  if (spellId === 'fight-end') {
+    animationRun = false;
+    return;
+  }
+  const arrayOfDamage = buildArrayOfDamage(spellDamage);
+  calculateDamage(arrayOfDamage);
+  return;
 }
 
 function createBossSpellSliders({ spells }) {
