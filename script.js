@@ -7,6 +7,8 @@ const timeLine = document.querySelector('.timeline-container');
 const sliderBar = document.querySelector('.slider');
 const manaBarDiv = document.querySelector('#mana-bar');
 const manaTextDiv = document.querySelector('.mana-bar-text');
+const swipeButton = document.querySelector('#swipe-button');
+const ultimateButton = document.querySelector('#ultimate-button');
 manaTextDiv.innerHTML = `${player.manaBar['currentMana']}`;
 let spellSliders;
 let healthBarsDivs;
@@ -20,11 +22,14 @@ let castingTimer = 0;
 let globalTimer = 0;
 let mouseTimer = 0;
 let overhealing = 0;
+let swipeCD = false;
+let ultimateCD = false;
 
 window.onload = function () {
   createBossSpellList(boss);
   createHealthBars();
   createBossSpellSliders(boss);
+  addClickToHealButtons();
   calculatePixelsPerFrame(boss);
   calculateHealthPerPixel();
   calculatehotsPercentPerFrame();
@@ -43,19 +48,71 @@ function startAnimation() {
   updateBossSpellsPosition(boss);
   updateBossSpellsDivs(spellSliders, boss);
 
-  //calculateDamage();
   updateDamage();
   applyDamage();
   updateHealthDivs();
 
   if (healTarget !== null) castingHeal(healTarget);
   if (activeHots.length !== 0) hotsCountDown();
+  if (swipeCD) swipeCoolDown();
+  if (ultimateCD) ultimateCoolDown();
 
   if (animationRun) {
     setTimeout(() => {
       startAnimation();
     }, 16.67);
   }
+}
+
+function swipeCoolDown() {
+  let tempWidthPercent = player.skills.aoe.currentWidth;
+  tempWidthPercent -= player.skills.aoe.percentFrame;
+  if (tempWidthPercent < 0) {
+    tempWidthPercent = 100;
+    swipeCD = false;
+  }
+  swipeButton.style.width = `${tempWidthPercent}%`;
+  player.skills.aoe['currentWidth'] = tempWidthPercent;
+}
+
+function ultimateCoolDown() {
+  let tempWidthPercent = player.skills.ultimate.currentWidth;
+  tempWidthPercent -= player.skills.ultimate.percentFrame;
+  if (tempWidthPercent < 0) {
+    tempWidthPercent = 100;
+    ultimateCD = false;
+  }
+  ultimateButton.style.width = `${tempWidthPercent}%`;
+  player.skills.ultimate['currentWidth'] = tempWidthPercent;
+}
+
+function swipeHeal() {
+  healthBars.forEach((bar, index) => {
+    applyHealOnTarget(index, 'aoe');
+  });
+  updateMana('aoe');
+}
+
+function ultimateHeal() {
+  const currenthealth = healthBars.map(bar => bar.currentHealth);
+  const lowest = currenthealth.indexOf(Math.min(...currenthealth));
+  applyHealOnTarget(lowest, 'ultimate');
+  updateMana('ultimate');
+}
+
+function addClickToHealButtons() {
+  document.querySelector('.swipe-container').addEventListener('click', () => {
+    if (!swipeCD && player.manaBar.currentMana >= player.skills.aoe.manaCost) {
+      swipeHeal();
+      swipeCD = true;
+    }
+  });
+  document.querySelector('.ult-container').addEventListener('click', () => {
+    if (!ultimateCD && player.manaBar.currentMana >= player.skills.ultimate.manaCost) {
+      ultimateHeal();
+      ultimateCD = true;
+    }
+  });
 }
 
 function applyHealOnTarget(index, type) {
@@ -176,6 +233,13 @@ function calculatehotsPercentPerFrame() {
     percentperFrame = Math.floor(percentperFrame * 100) / 100;
     bar.auras.healOverTime['percentFrame'] = percentperFrame;
   });
+  let percentperFrame = 100 / (player.skills.aoe.cooldownTimer * 60);
+  percentperFrame = Math.floor(percentperFrame * 100) / 100;
+  player.skills.aoe['percentFrame'] = percentperFrame;
+
+  percentperFrame = 100 / (player.skills.ultimate.cooldownTimer * 60);
+  percentperFrame = Math.floor(percentperFrame * 100) / 100;
+  player.skills.ultimate['percentFrame'] = percentperFrame;
 }
 
 function calculateHealthPerPixel() {

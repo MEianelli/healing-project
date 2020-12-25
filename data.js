@@ -18,14 +18,14 @@ export const data = {
         currentPosition: 0,
         spellDamage: {
           type: 'direct',
-          amount: 500,
+          amount: 0,
           targets: 'all',
         },
       },
       {
         spellName: 'cleave',
         spellId: 'cleave',
-        duration: 12,
+        duration: 13,
         spellColor: '#fe0000',
         currentPosition: 0,
         spellDamage: {
@@ -37,7 +37,7 @@ export const data = {
       {
         spellName: 'burst',
         spellId: 'burst',
-        duration: 6,
+        duration: 7,
         spellColor: '#4412f4',
         currentPosition: 0,
         spellDamage: {
@@ -54,14 +54,14 @@ export const data = {
         currentPosition: 0,
         spellDamage: {
           type: 'direct',
-          amount: 200,
+          amount: 0,
           targets: 'all',
         },
       },
       {
         spellName: 'ultimate',
         spellId: 'ultimate',
-        duration: 40,
+        duration: 43,
         spellColor: '#00d88f',
         currentPosition: 0,
         spellDamage: {
@@ -340,20 +340,24 @@ export const data = {
         duration: 5,
       },
       hold: {
-        name: 'renew',
-        manaCost: 400,
-        amountToHeal: 500,
+        name: 'flash',
+        manaCost: 500,
+        amountToHeal: 1500,
         castTime: 5,
       },
       aoe: {
-        name: 'renew',
-        manaCost: 400,
+        name: 'prayer',
+        manaCost: 2000,
         amountToHeal: 200,
+        cooldownTimer: 5,
+        currentWidth: 100,
       },
       ultimate: {
-        name: 'renew',
+        name: 'single',
         manaCost: 1000,
-        amountToHeal: 200,
+        amountToHeal: 4000,
+        cooldownTimer: 15,
+        currentWidth: 100,
       },
     },
   },
