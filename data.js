@@ -18,7 +18,7 @@ export const data = {
         currentPosition: 0,
         spellDamage: {
           type: 'direct',
-          amount: 0,
+          amount: 400,
           targets: 'all',
         },
       },
@@ -54,7 +54,7 @@ export const data = {
         currentPosition: 0,
         spellDamage: {
           type: 'direct',
-          amount: 0,
+          amount: 100,
           targets: 'all',
         },
       },
